@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Settings Page</title>
+  </head>
+  <body>
+    <h1>Settings Page</h1>
+    <form id="myForm">
+        <h2 id="errorMessage"></h2>
+        <label>Name:</label>
+        <input type="text" name="name" id="name" class="stored" value="" />
+
+        <input type="submit"  class="demo-button" value="Submit" />
+   </form>
+       <a href="index.html"> home </a>
+   <script>
+       var _$ = function(str){
+          return document.querySelector(str);
+       };
+       window.onload = init();
+       function init() {
+           if (localStorage.getItem("name") !== null) {
+               process.env.printersName = localStorage.getItem("name");
+               _$('#name').value = localStorage.getItem("name");
+           }
+       }
+       document.querySelector("#myForm").addEventListener("submit", function(e){
+           if(!_$('#name').value){
+               e.preventDefault();    //stop form from submitting
+               _$('#errorMessage').innerHTML = 'No Name Provided';
+           }
+           _$('#errorMessage').innerHTML = '';
+           return localStorage.setItem("name", _$('#name').value);
+       });
+</script>
+  </body>
+</html>

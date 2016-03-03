@@ -2,12 +2,14 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Printer Listener!</title>
+    <script src="./scripts/pusher.min.js"></script>
+  <script src="./scripts/printJob.js"></script>
+    <script src="./scripts/initializer.js"></script>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <h1>Printer Listener!</h1>
+    Printers Name: <script>document.write(process.printer)</script>
+    <a href="settings.html"> Settings </a>
   </body>
 </html>
