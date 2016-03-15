@@ -1,6 +1,7 @@
 var _$ = function(str){
    return document.querySelector(str);
 };
+
 window.onload = init();
 function init() {
     if (localStorage.getItem("name") !== null) {

@@ -6,10 +6,13 @@
   </head>
   <body>
     <h1>Settings Page</h1>
-    <form id="myForm">
+    <form name="myform" id="myForm">
         <h2 id="errorMessage"></h2>
         <label>Name:</label>
-        <input type="text" name="name" id="name" class="stored" value="" />
+        <!-- <input type="text" name="name" id="name" class="stored" value="" />-->
+        <select value="" name="req_one" id="printerSelect">
+            <option value=""> Select Printer </option>
+        </select>
 
         <input type="submit"  class="demo-button" value="Submit" />
    </form>
@@ -18,20 +21,39 @@
        var _$ = function(str){
           return document.querySelector(str);
        };
+        var printer = require("printer");
        window.onload = init();
        function init() {
            if (localStorage.getItem("name") !== null) {
                process.env.printersName = localStorage.getItem("name");
-               _$('#name').value = localStorage.getItem("name");
+               _$('#printerSelect').value = localStorage.getItem("name");
            }
        }
+        function populateSelect(){
+            var raw_printers = printer.getPrinters();
+            var modified_printers = raw_printers.map(function(printer){
+                return printer.name;
+            })
+                var sel = document.myform.req_one;
+            for (var i=0; i < modified_printers.length; i++){
+                var opt = document.createElement('option');
+                opt.innerHTML = modified_printers[i].replace(/[_]/g, ' ');
+                opt.value = modified_printers[i];
+                sel.appendChild(opt);
+            }
+        }
+
+        populateSelect();
+        
        document.querySelector("#myForm").addEventListener("submit", function(e){
-           if(!_$('#name').value){
-               e.preventDefault();    //stop form from submitting
-               _$('#errorMessage').innerHTML = 'No Name Provided';
+           e.preventDefault();    //stop form from submitting
+           if(!_$('#printerSelect').value){
+               return _$('#errorMessage').innerHTML = 'Select Printer';
            }
            _$('#errorMessage').innerHTML = '';
-           return localStorage.setItem("name", _$('#name').value);
+           var name = _$('#printerSelect').value;
+           localStorage.setItem("name", name);
+           return window.location.assign('index.html');
        });
 </script>
   </body>

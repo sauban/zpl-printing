@@ -2,14 +2,18 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Printer Listener!</title>
+    <title>Printer Watcher!</title>
     <script src="./scripts/pusher.min.js"></script>
   <script src="./scripts/printJob.js"></script>
     <script src="./scripts/initializer.js"></script>
   </head>
   <body>
-    <h1>Printer Listener!</h1>
-    Printers Name: <script>document.write(process.printer)</script>
+    <h1>Printer Watcher</h1>
+    <p>Printer Name: <b><i id="printerName"></i></b> </p> 
+    <p> Current Job Status: </p><p id="currentJob"></p>
+    <h4 id="notifier"></h4>
+    <h3 id="error"></h3>
+    <script>_$('#printerName').innerHTML = process.printer.replace(/[_]/g, ' ')</script>
     <a href="settings.html"> Settings </a>
   </body>
 </html>
