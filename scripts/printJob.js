@@ -1,6 +1,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var printer = require('printer');
+var http = require('http');
 
 var pusher = new Pusher('ee7c5bd2b1e87e7d5f2e', {
   encrypted: true
@@ -27,26 +28,23 @@ function printZebra(text, name){
 var channel = pusher.subscribe('printer_channel');
 channel.bind('print', function(data) {
     var toprint = atob(data.data);
-    // var printRequest = new XMLHttpRequest();
-    // var printerName = process.printer;
-    // var query = "printerName="+ printerName +"&labelBytes="+ data.data;
-    // printRequest.onreadystatechange = function () {
-    //     if (this.readyState === 4) {
-    //         var message = {};
-    //         message.requestType = "response";
-    //         message.query = this.response;
-    //         window.opener.postMessage(message, "'{8}'");
-    //     }
-    // }
-    // request.post({url: 'http://127.0.0.1:4349/print', form:{printerName: printerName, labelBytes: data.data} }, function(err, res, body){
-    //     console.log(err);
-    //     console.log(res);
-    //     console.log(body);
-    // })
-    // printRequest.open("POST", "http://127.0.0.1:4349/print", true);
-    // printRequest.responseType = "text";
-    // printRequest.setRequestHeader("Access-Control-Allow-Origin", "file://");
-    // printRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    // printRequest.send(query);
-  return printZebra(data.data, process.printer);
+    var printRequest = new XMLHttpRequest();
+    var printerName = process.printer;
+    var query = "printerName="+ printerName +"&labelBytes="+ data.data;
+    printRequest.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            var message = {};
+            message.requestType = "response";
+            message.query = this.response;
+            window.opener.postMessage(message, "'{8}'");
+        }
+    }
+
+    printRequest.open("POST", "http://127.0.0.1:4349/print", true);
+    printRequest.responseType = "text";
+    printRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
+    printRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    printRequest.send(query);
+
+  return printZebra(toprint, process.printer);
 });
