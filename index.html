@@ -3,18 +3,22 @@
   <head>
     <meta charset="UTF-8">
     <title>Printer Watcher!</title>
+    <script>
+        window.RSVP = require('./scripts/rsvp-3.1.0.min.js');
+    </script>
+    <script src="./scripts/sha-256.min.js"></script>
+    <script src="./scripts/qz-tray.js"></script>
+    <script src="./scripts/initializer.js"></script>
     <script src="./scripts/pusher.min.js"></script>
     <script src="./scripts/jquery.min.js"></script>
   <script src="./scripts/printJob.js"></script>
-    <script src="./scripts/initializer.js"></script>
   </head>
   <body>
     <h1>Printer Watcher</h1>
-    <p>Printer Name: <b><i id="printerName"></i></b> </p>
-    <p> Current Job Status: </p><p id="currentJob"></p>
-    <h4 id="notifier"></h4>
-    <h3 id="error"></h3>
-    <script>_$('#printerName').innerHTML = process.printer.replace(/[_]/g, ' ')</script>
+    <div id="notifier" style="color: green;"></div>
+    <p id="printerName" style="display: none;">Printer Name: </p>
+    <p id="jobStatus" style="display: none;"> Current Job Status: </p><p id="currentJob"></p>
+    <div id="error"></div>
     <a href="settings.html"> Settings </a>
   </body>
 </html>
