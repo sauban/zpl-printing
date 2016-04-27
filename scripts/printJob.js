@@ -5,8 +5,9 @@ var pusher = new Pusher('ee7c5bd2b1e87e7d5f2e', {
 pusher.connect(function(a){
     console.log(a);
 });
-var channel = pusher.subscribe('printer_channel');
-channel.bind('print', function(data) {
+
+
+function print(data) {
     var config = qz.configs.create(process.printer);
     config.reconfigure({
         altPrinting:false,
@@ -27,7 +28,16 @@ channel.bind('print', function(data) {
         scaleContent:true,
         size:null,
         units:"in"
-    })
+    });
+    qz.print(config, data).catch(function(err){
+         _$('#error').innerHTML = '<h3 style="color: red;">An error as occurred</h3>' + '<h4>' + err + '</h4>';
+    });
+}
+
+var arrayList = [];
+
+var channel = pusher.subscribe('printer_channel');
+channel.bind('print', function(data) {
     var printData = [
         {
             type: 'raw',
@@ -35,8 +45,32 @@ channel.bind('print', function(data) {
             data: data.data
         }
     ];
+     if (data.text === null) {
+        print(printData);
+     } else {
+         var liData = {
+             name: data.text,
+             data: printData
+         };
+         arrayList.push(liData);
+         rerender();
+     }
 
-    qz.print(config, printData).catch(function(err){
-         _$('#error').innerHTML = '<h3 style="color: red;">An error as occurred</h3>' + '<h4>' + err + '</h4>';
-    });
 });
+
+function rerender() {
+    _$('#jobs').innerHTML = "<p>New shipments, click on the shipment to send to printer </p>";
+    var list = document.getElementById("list");
+    list.innerHTML = "";
+    for (var i = 0; i < arrayList.length; i++) {
+        var newLi = document.createElement("li");
+        newLi.innerHTML = arrayList[i].name;
+        list.appendChild(newLi);
+        (function(value){
+        newLi.addEventListener("click", function(e) {
+            print(value.data);
+            arrayList.splice(arrayList.indexOf(value), 1);
+            e.target.remove();
+        }, false);})(arrayList[i]);
+    }
+};
